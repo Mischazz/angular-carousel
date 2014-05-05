@@ -45,6 +45,7 @@ angular.module('angular-carousel')
 angular.module('angular-carousel')
 
 .directive('rnCarouselIndicators', [function() {
+
   return {
     restrict: 'A',
     replace: true,
