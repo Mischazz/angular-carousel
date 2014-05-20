@@ -93,7 +93,7 @@ angular.module('angular-carousel')
             // used to compute the sliding speed
                 timeConstant = 75,
             // in container % how much we need to drag to trigger the slide change
-                moveTreshold = 0.05,
+                moveTreshold = 0.25,
             // in absolute pixels, at which distance the slide stick to the edge on release
                 rubberTreshold = 3;
 
@@ -146,7 +146,7 @@ angular.module('angular-carousel')
                         return true;
                     });
 
-                    return function (scope, iElement, iAttributes, containerCtrl) {
+                    return function (scope, iElement, iAttributes) {
                         carouselId++;
 
                         var containerWidth,
@@ -172,7 +172,7 @@ angular.module('angular-carousel')
                                 scope.indicatorIndex = newValue;
                             });
                             scope.$watch('indicatorIndex', function (newValue) {
-                                goToSlide(newValue, true);
+                              scope.$parent.goToSlide(newValue, true);
                             });
 
                         }
@@ -231,7 +231,7 @@ angular.module('angular-carousel')
                                             newValue = 0;
                                             updateParentIndex(newValue);
                                         }
-                                        goToSlide(newValue, true);
+                                      scope.$parent.goToSlide(newValue, true);
                                     }
                                 });
                                 isIndexBound = true;
@@ -252,7 +252,7 @@ angular.module('angular-carousel')
                                 }
                                 updateIndicatorArray();
                                 if (!containerWidth) updateContainerWidth();
-                                goToSlide(scope.carouselIndex);
+                              scope.$parent.goToSlide(scope.carouselIndex);
                             });
                         } else {
                             slidesCount = iElement.children().length;
@@ -299,9 +299,9 @@ angular.module('angular-carousel')
                             move += (scope.carouselBufferIndex * containerWidth);
 
                             if (!is3dAvailable) {
-                                carousel[0].style[transformProperty] = 'translate(' + move + 'px, 0)';
+                                carousel[0].style[transformProperty] = 'translate(' + move +'px, 0)';
                             } else {
-                                carousel[0].style[transformProperty] = 'translate3d(' + move + 'px, 0, 0)';
+                                carousel[0].style[transformProperty] = 'translate3d(' + move +'px, 0, 0)';
                             }
                         }
 
@@ -319,7 +319,7 @@ angular.module('angular-carousel')
                                      this will work on IE9 */
                                     requestAnimationFrame(autoScroll);
                                 } else {
-                                    goToSlide(destination / containerWidth);
+                                  scope.$parent.goToSlide (destination / containerWidth);
                                 }
                             }
                         }
@@ -347,7 +347,8 @@ angular.module('angular-carousel')
                             scope.carouselBufferIndex = bufferIndex;
                         }
 
-                        function goToSlide(i, animate) {
+                    scope.$parent.goToSlide  =  function(i, animate) {
+
                             if (isNaN(i)) {
                                 i = scope.carouselIndex;
                             }
@@ -490,7 +491,7 @@ angular.module('angular-carousel')
                         // initialise first slide only if no binding
                         // if so, the binding will trigger the first init
                         if (!isIndexBound) {
-                            goToSlide(scope.carouselIndex);
+                          scope.$parent.goToSlide (scope.carouselIndex);
                         }
 
                         // detect supported CSS property
@@ -529,7 +530,7 @@ angular.module('angular-carousel')
 
                         function onOrientationChange() {
                             updateContainerWidth();
-                            goToSlide();
+                          scope.$parent.goToSlide ;
                         }
 
                         // handle orientation change
